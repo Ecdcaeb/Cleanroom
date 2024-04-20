@@ -21,7 +21,12 @@ package net.minecraftforge.debug.client.model;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.RegistryEvent;
@@ -29,6 +34,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
+
+import javax.annotation.Nullable;
 
 @Mod.EventBusSubscriber
 @Mod(modid = ItemModelGenerationTest.MOD_ID, name = "Item model generation test", version = "1.0", acceptableRemoteVersions = "*")
@@ -50,6 +57,9 @@ public class ItemModelGenerationTest
 
     @GameRegistry.ObjectHolder("pattern_test")
     public static final Item PATTERN_TEST = null;
+
+    @GameRegistry.ObjectHolder("internal_model_test")
+    public static final Item INTERNAL_MODEL_TEST = null;
 
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event)
@@ -74,6 +84,10 @@ public class ItemModelGenerationTest
                 new Item()
                         .setRegistryName("pattern_test")
                         .setTranslationKey(MOD_ID + ".pattern_test")
+                        .setCreativeTab(CreativeTabs.MISC),
+                new Item(){{addPropertyOverride(new ResourceLocation(MOD_ID, "time"), (stack, worldIn, entityIn) -> worldIn == null ? 0 : worldIn.getTotalWorldTime() % 5);}}
+                        .setRegistryName("internal_model_test")
+                        .setRegistryName(MOD_ID + ".internal_model_test")
                         .setCreativeTab(CreativeTabs.MISC)
         );
     }
@@ -89,6 +103,7 @@ public class ItemModelGenerationTest
             setCustomMRL(OPACITY_TEST);
             setCustomMRL(OVERLAP_TEST);
             setCustomMRL(PATTERN_TEST);
+            setCustomMRL(INTERNAL_MODEL_TEST);
         }
 
         private static void setCustomMRL(Item item)

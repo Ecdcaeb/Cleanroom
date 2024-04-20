@@ -1,0 +1,62 @@
+{
+  "parent": "item/generated",
+  "textures": {
+  },
+  "overrides":[
+    {
+      "predicate": {
+        "item_model_generation_test:time": 0
+      },
+      "model": {
+        "parent": "item/generated",
+        "textures": {
+          "layer0": "item_model_generation_test:items/pattern_test"
+        }
+      }
+    },
+    {
+      "predicate": {
+        "item_model_generation_test:time": 1
+      },
+      "model": {
+        "parent": "item/generated",
+        "textures": {
+          "layer0": "item_model_generation_test:items/overlap_test"
+        }
+      }
+    },
+    {
+      "predicate": {
+        "item_model_generation_test:time": 2
+      },
+      "model": {
+        "parent": "item/generated",
+        "textures": {
+          "layer0": "item_model_generation_test:items/opacity_test"
+        }
+      }
+    },
+    {
+      "predicate": {
+        "item_model_generation_test:time": 3
+      },
+      "model": {
+        "parent": "item/generated",
+        "textures": {
+          "layer0": "item_model_generation_test:items/intersection_test"
+        }
+      }
+    },
+    {
+      "predicate": {
+        "item_model_generation_test:time": 4
+      },
+      "model": {
+        "parent": "item/generated",
+        "textures": {
+          "layer0": "item_model_generation_test:items/animation_test"
+        }
+      }
+    }
+  ]
+}

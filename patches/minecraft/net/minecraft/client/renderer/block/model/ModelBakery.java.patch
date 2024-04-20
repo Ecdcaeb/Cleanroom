@@ -251,7 +251,7 @@
                  if (s.startsWith("builtin/"))
                  {
                      String s2 = s.substring("builtin/".length());
-@@ -374,20 +335,21 @@
+@@ -374,20 +335,31 @@
                      reader = new InputStreamReader(iresource.func_110527_b(), StandardCharsets.UTF_8);
                  }
  
@@ -260,6 +260,16 @@
 -                return modelblock;
 +                lvt_5_2_ = ModelBlock.func_178307_a(reader);
 +                lvt_5_2_.field_178317_b = p_177594_1_.toString();
++                int i = 0;
++                for(ItemOverride itemOverride : lvt_5_2_.func_187966_f()){
++                    String name = p_177594_1_.toString()+"$"+i;
++                    ResourceLocation location1 = new ResourceLocation(name);
++                    itemOverride.cachedInternalModel.field_178317_b = name;
++                    itemOverride.setLocation(location1);
++                    this.field_177611_h.put(location1, itemOverride.cachedInternalModel);
++                    itemOverride.cachedInternalModel = null;
++                    i++;
++                }
 +                ModelBlock modelblock1 = lvt_5_2_;
 +                return modelblock1;
              }
@@ -279,7 +289,7 @@
      }
  
      protected ResourceLocation func_177580_d(ResourceLocation p_177580_1_)
-@@ -443,269 +405,67 @@
+@@ -443,269 +415,67 @@
  
      protected void func_177592_e()
      {
@@ -575,7 +585,7 @@
          }
  
          return list;
-@@ -713,7 +473,7 @@
+@@ -713,7 +483,7 @@
  
      protected ResourceLocation func_177583_a(String p_177583_1_)
      {
@@ -584,7 +594,7 @@
          return new ResourceLocation(resourcelocation.func_110624_b(), "item/" + resourcelocation.func_110623_a());
      }
  
-@@ -733,7 +493,7 @@
+@@ -733,7 +503,7 @@
          {
              ModelBlockDefinition modelblockdefinition = entry.getKey();
              Multipart multipart = modelblockdefinition.func_188001_c();
@@ -593,7 +603,7 @@
              MultipartBakedModel.Builder multipartbakedmodel$builder = new MultipartBakedModel.Builder();
  
              for (Selector selector : multipart.func_188136_a())
-@@ -774,23 +534,26 @@
+@@ -774,23 +544,26 @@
              {
                  ModelBlock modelblock = this.field_177611_h.get(variant.func_188046_a());
  
@@ -635,7 +645,7 @@
                  }
              }
  
-@@ -798,7 +561,7 @@
+@@ -798,7 +571,7 @@
  
              if (i == 0)
              {
@@ -644,7 +654,7 @@
              }
              else if (i == 1)
              {
-@@ -818,36 +581,39 @@
+@@ -818,36 +591,39 @@
          for (Entry<String, ResourceLocation> entry : this.field_177615_s.entrySet())
          {
              ResourceLocation resourcelocation = entry.getValue();
@@ -703,7 +713,7 @@
          List<ModelResourceLocation> list = Lists.newArrayList(this.field_177612_i.keySet());
          Collections.sort(list, new Comparator<ModelResourceLocation>()
          {
-@@ -867,7 +633,7 @@
+@@ -867,7 +643,7 @@
  
                  if (modelblock == null)
                  {
@@ -712,7 +722,7 @@
                  }
                  else
                  {
-@@ -886,9 +652,7 @@
+@@ -886,9 +662,7 @@
  
                      if (modelblock1 == null)
                      {
@@ -723,7 +733,7 @@
                      }
                      else
                      {
-@@ -905,9 +669,13 @@
+@@ -905,9 +679,13 @@
      @Nullable
      private IBakedModel func_177578_a(ModelBlock p_177578_1_, ModelRotation p_177578_2_, boolean p_177578_3_)
      {
@@ -739,7 +749,7 @@
  
          if (p_177578_1_.func_178298_a().isEmpty())
          {
-@@ -922,18 +690,13 @@
+@@ -922,18 +700,13 @@
                      BlockPartFace blockpartface = blockpart.field_178240_c.get(enumfacing);
                      TextureAtlasSprite textureatlassprite1 = this.field_177599_g.get(new ResourceLocation(p_177578_1_.func_178308_c(blockpartface.field_178242_d)));
  
@@ -761,7 +771,7 @@
                      }
                  }
              }
-@@ -942,22 +705,14 @@
+@@ -942,22 +715,14 @@
          }
      }
  
@@ -792,7 +802,7 @@
      }
  
      private void func_177597_h()
-@@ -974,8 +729,8 @@
+@@ -974,8 +739,8 @@
  
      private void func_177574_i()
      {
@@ -803,7 +813,7 @@
  
          for (ResourceLocation resourcelocation : this.field_177611_h.keySet())
          {
-@@ -1000,9 +755,7 @@
+@@ -1000,9 +765,7 @@
              }
              catch (Exception exception)
              {
@@ -814,7 +824,7 @@
              }
  
              set.add(resourcelocation1);
-@@ -1050,7 +803,7 @@
+@@ -1050,7 +813,7 @@
  
      protected Set<ResourceLocation> func_177585_a(ModelBlock p_177585_1_)
      {
@@ -823,7 +833,7 @@
  
          for (BlockPart blockpart : p_177585_1_.func_178298_a())
          {
-@@ -1072,7 +825,6 @@
+@@ -1072,7 +835,6 @@
          set.remove(TextureMap.field_174945_f);
          ITextureMapPopulator itexturemappopulator = new ITextureMapPopulator()
          {
@@ -831,7 +841,7 @@
              public void func_177059_a(TextureMap p_177059_1_)
              {
                  for (ResourceLocation resourcelocation : set)
-@@ -1088,7 +840,7 @@
+@@ -1088,7 +850,7 @@
  
      private Set<ResourceLocation> func_177571_k()
      {
@@ -840,7 +850,7 @@
  
          for (ResourceLocation resourcelocation : this.field_177615_s.values())
          {
-@@ -1189,5 +941,24 @@
+@@ -1189,5 +951,24 @@
          field_177600_d.put("missing", field_188641_d);
          field_177606_o.field_178317_b = "generation marker";
          field_177616_r.field_178317_b = "block entity marker";

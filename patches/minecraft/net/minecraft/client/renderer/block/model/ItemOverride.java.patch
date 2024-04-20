@@ -1,0 +1,50 @@
+--- before/net/minecraft/client/renderer/block/model/ItemOverride.java
++++ after/net/minecraft/client/renderer/block/model/ItemOverride.java
+@@ -23,13 +23,21 @@
+ @SideOnly(Side.CLIENT)
+ public class ItemOverride
+ {
+-    private final ResourceLocation field_188028_a;
++    private ResourceLocation field_188028_a;
+     private final Map<ResourceLocation, Float> field_188029_b;
++    ModelBlock cachedInternalModel;
+ 
+     public ItemOverride(ResourceLocation p_i46571_1_, Map<ResourceLocation, Float> p_i46571_2_)
+     {
+         this.field_188028_a = p_i46571_1_;
+         this.field_188029_b = p_i46571_2_;
++        this.cachedInternalModel = null;
++    }
++
++    ItemOverride(Map<ResourceLocation, Float> propertyValues, ModelBlock internalModel)
++    {
++        this.field_188029_b = propertyValues;
++        this.cachedInternalModel = internalModel;
+     }
+ 
+     public ResourceLocation func_188026_a()
+@@ -37,6 +45,10 @@
+         return this.field_188028_a;
+     }
+ 
++    void setLocation(ResourceLocation resourceLocation){
++        this.field_188028_a = resourceLocation;
++    }
++
+     boolean func_188027_a(ItemStack p_188027_1_, @Nullable World p_188027_2_, @Nullable EntityLivingBase p_188027_3_)
+     {
+         Item item = p_188027_1_.func_77973_b();
+@@ -60,8 +72,12 @@
+             public ItemOverride deserialize(JsonElement p_deserialize_1_, Type p_deserialize_2_, JsonDeserializationContext p_deserialize_3_) throws JsonParseException
+             {
+                 JsonObject jsonobject = p_deserialize_1_.getAsJsonObject();
+-                ResourceLocation resourcelocation = new ResourceLocation(JsonUtils.func_151200_h(jsonobject, "model"));
++                com.google.gson.JsonElement element = jsonobject.get("model");
+                 Map<ResourceLocation, Float> map = this.func_188025_a(jsonobject);
++                ResourceLocation resourcelocation;
++                if (element.isJsonObject()){
++                    return new ItemOverride(map, ModelBlock.func_178294_a(element.getAsJsonObject().toString()));
++                }else resourcelocation = new ResourceLocation(element.getAsString());
+                 return new ItemOverride(resourcelocation, map);
+             }
+ 
