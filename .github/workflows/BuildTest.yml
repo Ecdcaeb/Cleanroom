@@ -58,7 +58,11 @@ jobs:
 
       - name: Fix Gradle permission
         run: chmod +x ./gradlew
+      
+      # use the action run number as the version of cleanroom
 
+      - name: Set Cleanroom version
+        run: sed -i "a/new_forge_version.*=.*/-${{ github.run_number }}/" gradle.properties
       - name: Setup Forge env
         run: ./gradlew setup
       - name: Stop Gradle daemon
@@ -77,7 +81,7 @@ jobs:
         id: upload-job
         uses: actions/upload-artifact@v4.3.3
         with:
-          name: installer
+          name: installer-${{ github.run_number }}
           path: projects/cleanroom/build/libs/*-installer.jar
           if-no-files-found: error
 
