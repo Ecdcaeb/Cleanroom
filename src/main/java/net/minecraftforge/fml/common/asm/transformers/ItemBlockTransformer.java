@@ -23,6 +23,6 @@ public class ItemBlockTransformer extends FieldToMethodTransformer
 {
     public ItemBlockTransformer()
     {
-        super("net/minecraft/item/ItemBlock", "field_150939_a", "getBlockRaw");
+        super("net.minecraft.item.ItemBlock", "field_150939_a", "getBlockRaw");
     }
 }

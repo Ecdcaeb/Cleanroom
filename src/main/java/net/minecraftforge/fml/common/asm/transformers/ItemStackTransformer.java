@@ -23,6 +23,6 @@ public class ItemStackTransformer extends FieldToMethodTransformer
 {
     public ItemStackTransformer()
     {
-        super("net/minecraft/item/ItemStack", "field_151002_e", "getItemRaw");
+        super("net.minecraft.item.ItemStack", "field_151002_e", "getItemRaw");
     }
 }
