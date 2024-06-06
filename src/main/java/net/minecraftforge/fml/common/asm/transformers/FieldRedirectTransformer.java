@@ -33,6 +33,7 @@ import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
+@Deprecated
 public class FieldRedirectTransformer implements IClassTransformer
 {
     private final String clsName;
