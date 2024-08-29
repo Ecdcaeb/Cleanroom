@@ -1,0 +1,16 @@
+--- before/net/minecraft/client/resources/DefaultResourcePack.java
++++ after/net/minecraft/client/resources/DefaultResourcePack.java
+@@ -78,7 +78,12 @@
+     @Override
+     public boolean func_110589_b(ResourceLocation p_110589_1_)
+     {
+-        return this.func_110605_c(p_110589_1_) != null || this.field_188549_b.func_188545_b(p_110589_1_);
++        InputStream inputStream = this.func_110605_c(p_110589_1_);
++        if (inputStream != null){
++            org.apache.commons.io.IOUtils.closeQuietly(inputStream);
++            return true;
++        }
++        else return this.field_188549_b.func_188545_b(p_110589_1_);
+     }
+ 
+     @Override
