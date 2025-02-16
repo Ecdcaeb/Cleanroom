@@ -23,7 +23,15 @@
  import net.minecraft.village.VillageCollection;
  import net.minecraft.village.VillageSiege;
  import net.minecraft.world.biome.Biome;
-@@ -87,47 +88,52 @@
+@@ -68,6 +69,7 @@
+ import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
+ import net.minecraft.world.chunk.storage.IChunkLoader;
+ import net.minecraft.world.gen.ChunkProviderServer;
++import net.minecraft.world.gen.IChunkGenerator;
+ import net.minecraft.world.gen.feature.WorldGeneratorBonusChest;
+ import net.minecraft.world.gen.structure.StructureBoundingBox;
+ import net.minecraft.world.gen.structure.template.TemplateManager;
+@@ -87,47 +89,52 @@
      private final MinecraftServer field_73061_a;
      private final EntityTracker field_73062_L;
      private final PlayerChunkMap field_73063_M;
@@ -88,7 +96,7 @@
          }
          else
          {
-@@ -164,10 +170,10 @@
+@@ -164,10 +171,10 @@
              this.func_175723_af().func_177750_a(this.field_72986_A.func_176137_E());
          }
  
@@ -100,7 +108,7 @@
      public void func_72835_b()
      {
          super.func_72835_b();
-@@ -183,8 +189,8 @@
+@@ -183,8 +190,8 @@
          {
              if (this.func_82736_K().func_82766_b("doDaylightCycle"))
              {
@@ -111,7 +119,7 @@
              }
  
              this.func_73053_d();
-@@ -210,7 +216,7 @@
+@@ -210,7 +217,7 @@
  
          if (this.func_82736_K().func_82766_b("doDaylightCycle"))
          {
@@ -120,7 +128,7 @@
          }
  
          this.field_72984_F.func_76318_c("tickPending");
-@@ -224,6 +230,10 @@
+@@ -224,6 +231,10 @@
          this.field_175740_d.func_75528_a();
          this.field_72984_F.func_76318_c("portalForcer");
          this.field_85177_Q.func_85189_a(this.func_82737_E());
@@ -131,7 +139,7 @@
          this.field_72984_F.func_76319_b();
          this.func_147488_Z();
      }
-@@ -232,16 +242,17 @@
+@@ -232,16 +243,17 @@
      public Biome.SpawnListEntry func_175734_a(EnumCreatureType p_175734_1_, BlockPos p_175734_2_)
      {
          List<Biome.SpawnListEntry> list = this.func_72863_F().func_177458_a(p_175734_1_, p_175734_2_);
@@ -177,7 +185,7 @@
      }
  
      public boolean func_73056_e()
-@@ -311,7 +319,6 @@
+@@ -311,7 +320,6 @@
      }
  
      @SideOnly(Side.CLIENT)
@@ -185,7 +193,7 @@
      public void func_72974_f()
      {
          if (this.field_72986_A.func_76075_d() <= 0)
-@@ -327,8 +334,9 @@
+@@ -327,8 +335,9 @@
          {
              i += this.field_73012_v.nextInt(8) - this.field_73012_v.nextInt(8);
              j += this.field_73012_v.nextInt(8) - this.field_73012_v.nextInt(8);
@@ -196,7 +204,7 @@
              {
                  break;
              }
-@@ -338,7 +346,6 @@
+@@ -338,7 +347,6 @@
          this.field_72986_A.func_76087_c(j);
      }
  
@@ -204,7 +212,7 @@
      protected boolean func_175680_a(int p_175680_1_, int p_175680_2_, boolean p_175680_3_)
      {
          return this.func_72863_F().func_73149_a(p_175680_1_, p_175680_2_);
-@@ -361,7 +368,6 @@
+@@ -361,7 +369,6 @@
          this.field_72984_F.func_76319_b();
      }
  
@@ -212,7 +220,7 @@
      protected void func_147456_g()
      {
          this.func_184162_i();
-@@ -372,7 +378,7 @@
+@@ -372,7 +379,7 @@
  
              while (iterator1.hasNext())
              {
@@ -221,7 +229,7 @@
              }
          }
          else
-@@ -382,7 +388,7 @@
+@@ -382,7 +389,7 @@
              boolean flag1 = this.func_72911_I();
              this.field_72984_F.func_76320_a("pollingChunks");
  
@@ -230,7 +238,7 @@
              {
                  this.field_72984_F.func_76320_a("getChunk");
                  Chunk chunk = iterator.next();
-@@ -394,7 +400,7 @@
+@@ -394,7 +401,7 @@
                  chunk.func_150804_b(false);
                  this.field_72984_F.func_76318_c("thunder");
  
@@ -239,7 +247,7 @@
                  {
                      this.field_73005_l = this.field_73005_l * 3 + 1013904223;
                      int l = this.field_73005_l >> 2;
-@@ -404,39 +410,32 @@
+@@ -404,39 +411,32 @@
                      {
                          DifficultyInstance difficultyinstance = this.func_175649_E(blockpos);
  
@@ -305,7 +313,7 @@
          {
              public boolean apply(@Nullable EntityLivingBase p_apply_1_)
              {
-@@ -503,7 +501,7 @@
+@@ -503,7 +502,7 @@
  
          if (!list.isEmpty())
          {
@@ -314,7 +322,7 @@
          }
          else
          {
-@@ -516,27 +514,23 @@
+@@ -516,27 +515,23 @@
          }
      }
  
@@ -342,7 +350,7 @@
      public void func_175654_a(BlockPos p_175654_1_, Block p_175654_2_, int p_175654_3_, int p_175654_4_)
      {
          Material material = p_175654_2_.func_176223_P().func_185904_a();
-@@ -545,7 +539,10 @@
+@@ -545,7 +540,10 @@
          {
              if (p_175654_2_.func_149698_L())
              {
@@ -354,7 +362,7 @@
                  {
                      IBlockState iblockstate = this.func_180495_p(p_175654_1_);
  
-@@ -579,9 +576,9 @@
+@@ -579,9 +577,9 @@
          }
      }
  
@@ -365,7 +373,7 @@
          NextTickListEntry nextticklistentry = new NextTickListEntry(p_180497_1_, p_180497_2_);
          nextticklistentry.func_82753_a(p_180497_4_);
          Material material = p_180497_2_.func_176223_P().func_185904_a();
-@@ -598,10 +595,9 @@
+@@ -598,10 +596,9 @@
          }
      }
  
@@ -428,7 +436,7 @@
                          {
                              try
                              {
-@@ -763,7 +759,6 @@
+@@ -763,7 +760,6 @@
      }
  
      @Nullable
@@ -462,7 +470,7 @@
                  {
                      if (p_175712_2_)
                      {
-@@ -815,7 +806,7 @@
+@@ -815,7 +807,7 @@
  
                      if (list == null)
                      {
@@ -471,7 +479,7 @@
                      }
  
                      list.add(nextticklistentry);
-@@ -826,7 +817,6 @@
+@@ -826,7 +818,6 @@
          return list;
      }
  
@@ -479,7 +487,7 @@
      public void func_72866_a(Entity p_72866_1_, boolean p_72866_2_)
      {
          if (!this.func_175735_ai() && (p_72866_1_ instanceof EntityAnimal || p_72866_1_ instanceof EntityWaterMob))
-@@ -852,20 +842,21 @@
+@@ -852,20 +843,23 @@
          return this.field_73061_a.func_71268_U();
      }
  
@@ -487,7 +495,10 @@
      protected IChunkProvider func_72970_h()
      {
          IChunkLoader ichunkloader = this.field_73019_z.func_75763_a(this.field_73011_w);
-         return new ChunkProviderServer(this, ichunkloader, this.field_73011_w.func_186060_c());
+-        return new ChunkProviderServer(this, ichunkloader, this.field_73011_w.func_186060_c());
++        IChunkGenerator generator = this.field_73011_w.func_186060_c();
++        net.minecraftforge.common.ForgeHooks.onCreateChunkProvider(this, ichunkloader, this.field_73011_w, generator);
++        return new ChunkProviderServer(this, ichunkloader, generator);
      }
  
 -    @Override
@@ -504,7 +515,7 @@
      public void func_72963_a(WorldSettings p_72963_1_)
      {
          if (!this.field_72986_A.func_76070_v())
-@@ -881,16 +872,17 @@
+@@ -881,16 +875,17 @@
  
                  super.func_72963_a(p_72963_1_);
              }
@@ -525,7 +536,7 @@
                  }
  
                  throw new ReportedException(crashreport);
-@@ -927,6 +919,7 @@
+@@ -927,6 +922,7 @@
          }
          else
          {
@@ -533,7 +544,7 @@
              this.field_72987_B = true;
              BiomeProvider biomeprovider = this.field_73011_w.func_177499_m();
              List<Biome> list = biomeprovider.func_76932_a();
-@@ -952,8 +945,9 @@
+@@ -952,8 +948,9 @@
              {
                  i += random.nextInt(64) - random.nextInt(64);
                  k += random.nextInt(64) - random.nextInt(64);
@@ -561,7 +572,7 @@
  
              for (Chunk chunk : Lists.newArrayList(chunkproviderserver.func_189548_a()))
              {
-@@ -1055,20 +1050,19 @@
+@@ -1055,20 +1053,19 @@
          this.field_72986_A.func_176135_e(this.func_175723_af().func_177732_i());
          this.field_73019_z.func_75755_a(this.field_72986_A, this.field_73061_a.func_184103_al().func_72378_q());
          this.field_72988_C.func_75744_a();
@@ -584,7 +595,7 @@
              {
                  this.field_72996_f.add(entity);
                  this.func_72923_a(entity);
-@@ -1080,7 +1074,7 @@
+@@ -1080,7 +1077,7 @@
      {
          if (p_184165_1_.field_70128_L)
          {
@@ -593,7 +604,7 @@
              return false;
          }
          else
-@@ -1103,7 +1097,7 @@
+@@ -1103,7 +1100,7 @@
                          return false;
                      }
  
@@ -602,7 +613,7 @@
                  }
  
                  this.func_72973_f(entity);
-@@ -1113,7 +1107,6 @@
+@@ -1113,7 +1110,6 @@
          }
      }
  
@@ -610,7 +621,7 @@
      public void func_72923_a(Entity p_72923_1_)
      {
          super.func_72923_a(p_72923_1_);
-@@ -1130,7 +1123,6 @@
+@@ -1130,7 +1126,6 @@
          }
      }
  
@@ -618,7 +629,7 @@
      public void func_72847_b(Entity p_72847_1_)
      {
          super.func_72847_b(p_72847_1_);
-@@ -1147,22 +1139,11 @@
+@@ -1147,22 +1142,11 @@
          }
      }
  
@@ -642,7 +653,7 @@
              return true;
          }
          else
-@@ -1171,7 +1152,6 @@
+@@ -1171,7 +1155,6 @@
          }
      }
  
@@ -650,7 +661,7 @@
      public void func_72960_a(Entity p_72960_1_, byte p_72960_2_)
      {
          this.func_73039_n().func_151248_b(p_72960_1_, new SPacketEntityStatus(p_72960_1_, p_72960_2_));
-@@ -1182,12 +1162,10 @@
+@@ -1182,12 +1165,10 @@
          return (ChunkProviderServer)super.func_72863_F();
      }
  
@@ -665,7 +676,7 @@
          explosion.func_77278_a();
          explosion.func_77279_a(false);
  
-@@ -1198,20 +1176,15 @@
+@@ -1198,20 +1179,15 @@
  
          for (EntityPlayer entityplayer : this.field_73010_i)
          {
@@ -688,7 +699,7 @@
      public void func_175641_c(BlockPos p_175641_1_, Block p_175641_2_, int p_175641_3_, int p_175641_4_)
      {
          BlockEventData blockeventdata = new BlockEventData(p_175641_1_, p_175641_2_, p_175641_3_, p_175641_4_);
-@@ -1238,19 +1211,7 @@
+@@ -1238,19 +1214,7 @@
              {
                  if (this.func_147485_a(blockeventdata))
                  {
@@ -709,7 +720,7 @@
                  }
              }
  
-@@ -1261,9 +1222,7 @@
+@@ -1261,9 +1225,7 @@
      private boolean func_147485_a(BlockEventData p_147485_1_)
      {
          IBlockState iblockstate = this.func_180495_p(p_147485_1_.func_180328_a());
@@ -720,7 +731,7 @@
      }
  
      public void func_73041_k()
-@@ -1271,7 +1230,6 @@
+@@ -1271,7 +1233,6 @@
          this.field_73019_z.func_75759_a();
      }
  
@@ -728,7 +739,7 @@
      protected void func_72979_l()
      {
          boolean flag = this.func_72896_J();
-@@ -1279,36 +1237,35 @@
+@@ -1279,36 +1240,35 @@
  
          if (this.field_73003_n != this.field_73004_o)
          {
@@ -883,7 +894,7 @@
          {
              p_184159_1_.field_71135_a.func_147359_a(p_184159_9_);
          }
-@@ -1437,20 +1330,17 @@
+@@ -1437,20 +1333,17 @@
          return this.field_175741_N.get(p_175733_1_);
      }
  
@@ -904,7 +915,7 @@
      public BlockPos func_190528_a(String p_190528_1_, BlockPos p_190528_2_, boolean p_190528_3_)
      {
          return this.func_72863_F().func_180513_a(this, p_190528_1_, p_190528_2_, p_190528_3_);
-@@ -1464,6 +1354,11 @@
+@@ -1464,6 +1357,11 @@
      public FunctionManager func_193037_A()
      {
          return this.field_193036_D;
