@@ -20,6 +20,7 @@ public class StructureCollection implements IStructureProvider, Iterable<IStruct
     public final String name;
     public StructureCollection(String name, long seed, WorldServer worldServer) {
         this.random = new Random(seed);
+        this.name = name;
         MinecraftForge.EVENT_BUS.post(new StructureAttachEvent(this, worldServer));
     }
 
