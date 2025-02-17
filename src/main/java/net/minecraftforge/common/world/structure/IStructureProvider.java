@@ -60,10 +60,10 @@ public interface IStructureProvider {
     /**
      * Checks whether a location is inside a structure.
      * usually invoke {@link net.minecraft.world.gen.structure.MapGenStructure#isInsideStructure(BlockPos)}
-     * @param generator
-     * @param worldIn
-     * @param structureName
-     * @param pos
+     * @param generator generator
+     * @param worldIn world
+     * @param structureName name
+     * @param pos blockPos
      * @return false if not
      */
     boolean isInsideStructure(IChunkGenerator generator,World worldIn, String structureName, BlockPos pos);

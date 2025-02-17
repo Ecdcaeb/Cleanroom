@@ -111,14 +111,7 @@
      public Chunk func_186025_d(int p_186025_1_, int p_186025_2_)
      {
          Chunk chunk = this.func_186028_c(p_186025_1_, p_186025_2_);
-@@ -111,13 +141,14 @@
-             try
-             {
-                 chunk = this.field_186029_c.func_185932_a(p_186025_1_, p_186025_2_);
-+                net.minecraftforge.common.ForgeHooks.postGenerateChunk(this.field_186029_c, this.field_73251_h, chunk, p_186025_1_, p_186025_2_);
-             }
-             catch (Throwable throwable)
-             {
+@@ -117,7 +147,7 @@
                  CrashReport crashreport = CrashReport.func_85055_a(throwable, "Exception generating new chunk");
                  CrashReportCategory crashreportcategory = crashreport.func_85058_a("Chunk to be generated");
                  crashreportcategory.func_71507_a("Location", String.format("%d,%d", p_186025_1_, p_186025_2_));
@@ -127,15 +120,7 @@
                  crashreportcategory.func_71507_a("Generator", this.field_186029_c);
                  throw new ReportedException(crashreport);
              }
-@@ -141,6 +172,7 @@
-             {
-                 chunk.func_177432_b(this.field_73251_h.func_82737_E());
-                 this.field_186029_c.func_180514_a(chunk, p_73239_1_, p_73239_2_);
-+                net.minecraftforge.common.ForgeHooks.onRecreateStructures(this.field_186029_c, this.field_73251_h, p_73239_1_, p_73239_2_);
-             }
- 
-             return chunk;
-@@ -186,7 +218,7 @@
+@@ -186,7 +216,7 @@
          int i = 0;
          List<Chunk> list = Lists.newArrayList(this.field_73244_f.values());
  
@@ -143,7 +128,8 @@
 +        for (int j = 0; j < list.size(); ++j)
          {
              Chunk chunk = list.get(j);
-@@ -199,8 +231,9 @@
+ 
+@@ -199,8 +229,9 @@
              {
                  this.func_73242_b(chunk);
                  chunk.func_177427_f(false);
@@ -154,7 +140,7 @@
                  {
                      return false;
                  }
-@@ -215,31 +248,38 @@
+@@ -215,31 +246,38 @@
          this.field_73247_e.func_75818_b();
      }
  
@@ -196,7 +182,7 @@
              this.field_73247_e.func_75817_a();
          }
  
-@@ -251,7 +291,6 @@
+@@ -251,7 +289,6 @@
          return !this.field_73251_h.field_73058_d;
      }
  
@@ -204,23 +190,7 @@
      public String func_73148_d()
      {
          return "ServerChunkCache: " + this.field_73244_f.size() + " Drop: " + this.field_73248_b.size();
-@@ -265,12 +304,14 @@
-     @Nullable
-     public BlockPos func_180513_a(World p_180513_1_, String p_180513_2_, BlockPos p_180513_3_, boolean p_180513_4_)
-     {
-+        BlockPos pos = net.minecraftforge.common.ForgeHooks.onGetNearestStructurePos(this.field_186029_c, p_180513_1_, p_180513_2_, p_180513_3_, p_180513_4_);
-+        if (pos != null) return pos;
-         return this.field_186029_c.func_180513_a(p_180513_1_, p_180513_2_, p_180513_3_, p_180513_4_);
-     }
- 
-     public boolean func_193413_a(World p_193413_1_, String p_193413_2_, BlockPos p_193413_3_)
-     {
--        return this.field_186029_c.func_193414_a(p_193413_1_, p_193413_2_, p_193413_3_);
-+        return net.minecraftforge.common.ForgeHooks.isInsideStructure(this.field_186029_c, p_193413_1_, p_193413_2_, p_193413_3_) || this.field_186029_c.func_193414_a(p_193413_1_, p_193413_2_, p_193413_3_);
-     }
- 
-     public int func_73152_e()
-@@ -283,7 +324,6 @@
+@@ -283,7 +320,6 @@
          return this.field_73244_f.containsKey(ChunkPos.func_77272_a(p_73149_1_, p_73149_2_));
      }
  

@@ -511,11 +511,10 @@
          if (this.func_177419_t())
          {
              if (p_186034_1_.func_185933_a(this, this.field_76635_g, this.field_76647_h))
-@@ -1012,8 +1017,11 @@
+@@ -1012,8 +1017,10 @@
          {
              this.func_150809_p();
              p_186034_1_.func_185931_b(this.field_76635_g, this.field_76647_h);
-+            net.minecraftforge.common.ForgeHooks.postPopulateGenerate(p_186034_1_, this.field_76637_e, this.field_76635_g, this.field_76647_h);
 +            net.minecraftforge.fml.common.registry.GameRegistry.generateWorld(this.field_76635_g, this.field_76647_h, this.field_76637_e, p_186034_1_, this.field_76637_e.func_72863_F());
              this.func_76630_e();
          }
@@ -523,7 +522,7 @@
      }
  
      public BlockPos func_177440_h(BlockPos p_177440_1_)
-@@ -1068,7 +1076,7 @@
+@@ -1068,7 +1075,7 @@
          {
              BlockPos blockpos = this.field_177447_w.poll();
  
@@ -532,7 +531,7 @@
              {
                  TileEntity tileentity = this.func_177422_i(blockpos);
                  this.field_76637_e.func_175690_a(blockpos, tileentity);
-@@ -1121,7 +1129,7 @@
+@@ -1121,7 +1128,7 @@
      {
          if (this.field_76652_q.length != p_76602_1_.length)
          {
@@ -585,7 +584,7 @@
      }
  
      public Biome func_177411_a(BlockPos p_177411_1_, BiomeProvider p_177411_2_)
-@@ -1194,9 +1215,14 @@
+@@ -1194,9 +1214,14 @@
  
          if (k == 255)
          {
@@ -602,7 +601,7 @@
          }
  
          Biome biome1 = Biome.func_150568_d(k);
-@@ -1212,7 +1238,7 @@
+@@ -1212,7 +1237,7 @@
      {
          if (this.field_76651_r.length != p_76616_1_.length)
          {
@@ -728,7 +727,7 @@
              {
                  this.field_76637_e.func_175664_x(blockpos$mutableblockpos);
              }
-@@ -1422,11 +1445,12 @@
+@@ -1422,11 +1444,12 @@
      {
          if (this.field_76634_f.length != p_177420_1_.length)
          {
@@ -742,7 +741,7 @@
          }
      }
  
-@@ -1495,5 +1519,56 @@
+@@ -1495,5 +1518,56 @@
          IMMEDIATE,
          QUEUED,
          CHECK;

@@ -3,12 +3,12 @@ package net.minecraftforge.common.world.structure;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.StructureAttachEvent;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -62,6 +62,7 @@ public class StructureCollection implements IStructureProvider, Iterable<IStruct
         else return false;
     }
 
+    @Nonnull
     @Override
     public Iterator<IStructureProvider> iterator() {
         return providers.values().iterator();
