@@ -14,6 +14,9 @@ public class ForgeEarlyConfig {
     public static boolean WINDOW_START_FOCUSED = true;
     public static boolean WINDOW_START_ICONIFIED = false;
 
+    @Config.Comment("Enable this when the game has problem running on Wayland")
+    public static boolean FORCE_X11 = false;
+
     public static boolean WINDOW_CENTERED = true;
 
     @Config.Comment("Should the window have decorations (titlebar, border, close button)")
@@ -56,7 +59,7 @@ public class ForgeEarlyConfig {
     public static String COCOA_FRAME_NAME = "minecraft";
 
     public static String CONFIG_ANY_TIME_VERSION = "3.0";
-    public static String MIXIN_BOOTER_VERSION = "10.2";
+    public static String MIXIN_BOOTER_VERSION = "10.5";
 
     @Config.Comment("""
             Mods in this list have one or more of the problems list below:
