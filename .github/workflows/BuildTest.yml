@@ -10,6 +10,7 @@ name: Build and Upload Test Artifact
 on:
   push:
     paths:
+      – '.github/workflows/BuildTest.yml'
       - 'src/**'
       - 'buildSrc/**'
       - 'patches/**'
@@ -89,9 +90,18 @@ jobs:
           name: installer-${{ env.CLEANROOM_VERSION }}
           path: projects/cleanroom/build/libs/*-installer.jar
           if-no-files-found: error
+          
+      - name: Check for CLEANROOMMC_DISPATCH_TOKEN
+        id: check_secrets
+        run: |
+          if [ -n "${{ secrets.CLEANROOMMC_DISPATCH_TOKEN }}" ]; then
+            echo "has_token=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_token=false" >> $GITHUB_OUTPUT
+          fi
 
       - name: Repository Dispatch
-        if: ${{ success() && github.event_name != 'pull_request' && secrets.CLEANROOMMC_DISPATCH_TOKEN != ''}}
+        if: ${{ success() && github.event_name != 'pull_request' && steps.check_secrets.has_token == 'true'}}
         uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.CLEANROOMMC_DISPATCH_TOKEN }} # require PAT :shrug:
