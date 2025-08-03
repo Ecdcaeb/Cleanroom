@@ -20,7 +20,7 @@
 package net.minecraftforge.fml.common.asm.transformers;
 
 import java.lang.reflect.Modifier;
-import java.util.List;
+import java.util.*;
 
 import net.minecraft.launchwrapper.IClassTransformer;
 
@@ -34,37 +34,79 @@ import org.objectweb.asm.tree.MethodNode;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
-public class EventSubscriberTransformer implements IClassTransformer
-{
+public class EventSubscriberTransformer implements IClassTransformer {
+
     @Override
-    public byte[] transform(String name, String transformedName, byte[] basicClass)
-    {
+    public byte[] transform(String name, String transformedName, byte[] basicClass){
         if (basicClass == null) return null;
 
         ClassNode classNode = new ClassNode();
         new ClassReader(basicClass).accept(classNode, 0);
 
-        boolean isSubscriber = false;
+        LinkedList<MethodNode> subscribers = new LinkedList<>();
 
         for (MethodNode methodNode : classNode.methods)
         {
             List<AnnotationNode> anns = methodNode.visibleAnnotations;
 
-            if (anns != null && Iterables.any(anns, SubscribeEventPredicate.INSTANCE))
+            if (anns != null && anns.stream().anyMatch((v)-> "Lnet/minecraftforge/fml/common/eventhandler/SubscribeEvent;".equals(v.desc)))
             {
-                if (Modifier.isPrivate(methodNode.access))
-                {
-                    String msg = "Cannot apply @SubscribeEvent to private method %s/%s%s";
-                    throw new RuntimeException(String.format(msg, classNode.name, methodNode.name, methodNode.desc));
-                }
-
-                methodNode.access = toPublic(methodNode.access);
-                isSubscriber = true;
+                subscribers.add(methodNode);
             }
         }
 
-        if (isSubscriber)
+        if (!subscribers.isEmpty())
         {
+            for (MethodNode sub : subscribers) {
+                MethodNode methodNode = new MethodNode(
+                        toPublic(sub.access),
+                        "_cleanroom_eventbus_" + sub.name + "_"+sub.desc.hashCode(),
+                        "()Lnet/minecraftforge/fml/common/eventhandler/IEventListener;",
+                        null, null);
+                if (Modifier.isStatic(methodNode.access)) {
+                    methodNode.visitInvokeDynamicInsn(
+                            "invoke",
+                            "()Lnet/minecraftforge/fml/common/eventhandler/IEventListener;",
+                            new Handle(Opcodes.H_INVOKESTATIC,
+                                    "java/lang/invoke/LambdaMetafactory",
+                                    "metafactory",
+                                    "(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;",
+                                    false),
+                            new Object[]{
+                                    Type.getType("(Lnet/minecraftforge/fml/common/eventhandler/Event;)V"),
+                                    new Handle(Opcodes.H_INVOKESTATIC,
+                                            classNode.name,
+                                            sub.name,
+                                            sub.desc,
+                                            Modifier.isInterface(classNode.access)),
+                                    Type.getType(sub.desc.substring(0, sub.desc.lastIndexOf(')')) + ")V")
+                            }
+                    );
+                    methodNode.visitInsn(Opcodes.ARETURN);
+                } else {
+                    methodNode.visitVarInsn(Opcodes.ALOAD, 0);
+                    methodNode.visitInvokeDynamicInsn(
+                            "invoke",
+                            "(L"+ classNode.name +" ;)Lnet/minecraftforge/fml/common/eventhandler/IEventListener;",
+                            new Handle(Opcodes.H_INVOKESTATIC,
+                                    "java/lang/invoke/LambdaMetafactory",
+                                    "metafactory",
+                                    "(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;",
+                                    false),
+                            new Object[]{
+                                    Type.getType("(Lnet/minecraftforge/fml/common/eventhandler/Event;)V"),
+                                    new Handle(Modifier.isInterface(classNode.access) ? Opcodes.H_INVOKEINTERFACE : Opcodes.H_INVOKEVIRTUAL,
+                                            classNode.name,
+                                            sub.name,
+                                            sub.desc,
+                                            Modifier.isInterface(classNode.access)),
+                                    Type.getType(sub.desc.substring(0, sub.desc.lastIndexOf(')')) + ")V")
+                            }
+                    );
+                    methodNode.visitInsn(Opcodes.ARETURN);
+                }
+                classNode.methods.add(methodNode);
+            }
             classNode.access = toPublic(classNode.access);
 
             ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
@@ -75,19 +117,7 @@ public class EventSubscriberTransformer implements IClassTransformer
         return basicClass;
     }
 
-    private static int toPublic(int access)
-    {
+    private static int toPublic(int access) {
         return access & ~(Opcodes.ACC_PRIVATE | Opcodes.ACC_PROTECTED) | Opcodes.ACC_PUBLIC;
-    }
-
-    private static class SubscribeEventPredicate implements Predicate<AnnotationNode>
-    {
-        static final SubscribeEventPredicate INSTANCE = new SubscribeEventPredicate();
-
-        @Override
-        public boolean apply(AnnotationNode input)
-        {
-            return input.desc.equals("Lnet/minecraftforge/fml/common/eventhandler/SubscribeEvent;");
-        }
     }
 }
