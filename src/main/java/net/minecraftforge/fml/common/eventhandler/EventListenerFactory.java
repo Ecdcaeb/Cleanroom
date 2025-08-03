@@ -8,6 +8,7 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import net.minecraftforge.fml.common.ModContainer;
+import org.objectweb.asm.Type;
 
 class EventListenerFactory {
     
