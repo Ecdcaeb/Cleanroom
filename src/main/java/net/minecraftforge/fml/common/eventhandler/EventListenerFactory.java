@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 class EventListenerFactory {
     private static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
 
-    public static IEventListener createRawListener(Method method, boolean isStatic, Object instance) {
+    public static IEventListener bakeListener(Method method, Object instance) {
         try {
             return (IEventListener) method.getDeclaringClass().getMethod("_cleanroom_eventbus_" + method.getName() + "_" + Type.getMethodDescriptor(method).hashCode())
                     .invoke(instance);

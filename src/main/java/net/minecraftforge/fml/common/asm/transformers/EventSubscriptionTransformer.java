@@ -119,10 +119,10 @@ public class EventSubscriptionTransformer implements IClassTransformer
         boolean hasDefaultCtr      = false;
         boolean hasCancelable      = false;
         boolean hasResult          = false;
-        String voidDesc            = Type.getMethodDescriptor(VOID_TYPE);
-        String boolDesc            = Type.getMethodDescriptor(BOOLEAN_TYPE);
-        String listDesc            = tList.getDescriptor();
-        String listDescM           = Type.getMethodDescriptor(tList);
+        final String voidDesc            = Type.getMethodDescriptor(VOID_TYPE);
+        final String boolDesc            = Type.getMethodDescriptor(BOOLEAN_TYPE);
+        final String listDesc            = tList.getDescriptor();
+        final String listDescM           = Type.getMethodDescriptor(tList);
 
         for (MethodNode method : classNode.methods)
         {
@@ -239,6 +239,24 @@ public class EventSubscriptionTransformer implements IClassTransformer
         method.instructions.add(new FieldInsnNode(GETSTATIC, classNode.name, "LISTENER_LIST", listDesc));
         method.instructions.add(new InsnNode(ARETURN));
         classNode.methods.add(method);
+
+
+        {
+            /*Add:
+            *      public static ListenerList getListenerListFor_<net_minecraftforge_fml_common_eventhandler_Event>()
+            *      {
+            *              return this.LISTENER_LIST;
+            *      }
+            */
+            MethodNode getListenerList = new MethodNode(ACC_PUBLIC | ACC_STATIC,
+                    "getListenerListFor_" + classNode.name.replace('/', '_'),
+                    listDescM,
+                    null, null);
+            getListenerList.visitFieldInsn(GETSTATIC, classNode.name, "LISTENER_LIST", listDesc);
+            getListenerList.visitInsn(ARETURN);
+            classNode.methods.add(getListenerList);
+        }
+
         return true;
     }
 }

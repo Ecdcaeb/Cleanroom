@@ -24,12 +24,8 @@ import java.util.*;
 
 import net.minecraft.launchwrapper.IClassTransformer;
 
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.AnnotationNode;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.*;
+import org.objectweb.asm.tree.*;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;

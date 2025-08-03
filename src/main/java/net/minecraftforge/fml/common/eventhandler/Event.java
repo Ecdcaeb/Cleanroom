@@ -150,6 +150,10 @@ public class Event
         return listeners;
     }
 
+    public static ListenerList getListenerListFor_net_minecraftforge_fml_common_eventhandler_Event() {
+        return listeners;
+    }
+
     @Nullable
     public EventPriority getPhase()
     {
