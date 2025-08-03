@@ -51,7 +51,6 @@ public class ASMEventHandler implements IEventListener
 
         var rawHandler = EventListenerFactory.createRawListener(
             method,
-            Modifier.isStatic(method.getModifiers()),
             target
         );
         if (isGeneric && method.getGenericParameterTypes()[0] instanceof ParameterizedType parameterized) {
