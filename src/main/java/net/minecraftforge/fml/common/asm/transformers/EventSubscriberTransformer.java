@@ -57,7 +57,7 @@ public class EventSubscriberTransformer implements IClassTransformer {
                 MethodNode methodNode = new MethodNode(
                         toPublic(sub.access),
                         "_cleanroom_eventbus_" + sub.name + "_"+sub.desc.hashCode(),
-                        "()Lnet/minecraftforge/fml/common/eventhandler/IEventListener;",
+                        "()Lnet/minecraftforge/fml/common/eventhandler/IEventListener$EventListenerContext;",
                         null, null);
                 if (Modifier.isStatic(methodNode.access)) {
                     methodNode.visitInvokeDynamicInsn(
@@ -98,6 +98,21 @@ public class EventSubscriberTransformer implements IClassTransformer {
                                             Modifier.isInterface(classNode.access)),
                                     Type.getType(sub.desc.substring(0, sub.desc.lastIndexOf(')')) + ")V")
                             }
+                    );
+                    String clsName = Type.getMethodType(sub.desc).getArgumentTypes()[0].getInternalName();
+                    methodNode.visitMethodInsn(
+                                INVOKESTATIC,
+                                clsName,
+                                "getListenerListFor_" + clsName.replace('/', '_'),
+                                "()Lnet/minecraftforge/fml/common/eventhandler/ListenerList;",
+                                false
+                    );
+                    methodNode.visitMethodInsn(
+                            INVOKESTATIC,
+                            "net/minecraftforge/fml/common/eventhandler/IEventListener$EventListenerContext",
+                            "create",
+                            "(Lnet/minecraftforge/fml/common/eventhandler/IEventListener;Lnet/minecraftforge/fml/common/eventhandler/ListenerList;)Lnet/minecraftforge/fml/common/eventhandler/IEventListener$EventListenerContext;",
+                           false
                     );
                     methodNode.visitInsn(Opcodes.ARETURN);
                 }

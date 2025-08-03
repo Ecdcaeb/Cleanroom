@@ -43,16 +43,24 @@ public class ASMEventHandler implements IEventListener
         this(target, method, owner, false);
     }
 
-    public ASMEventHandler(Object target, Method method, ModContainer owner, boolean isGeneric) throws Exception
-    {
+    public static IEventListener.EventListenerContext asmEventHandler(Object target, Method method, ModContainer owner, boolean isGeneric) {
+        IEventListener.EventListenerContext context = EventListenerFactory.createRawListener(method, target);
+        return context.pass(new ASMEventHandler(target, method, owner, isGeneric, context.listener));
+    }
+
+    @Deprecated
+    public ASMEventHandler(Object target, Method method, ModContainer owner, boolean isGeneric) throws Exception {
+        this(target, method, owner, isGeneric, EventListenerFactory.createRawListener(
+            method,
+            target
+        ).listener);
+    }
+
+    public ASMEventHandler(Object target, Method method, ModContainer owner, boolean isGeneric, IEventHandler rawHandler) throws Exception {
         this.owner = owner;
         subInfo = method.getAnnotation(SubscribeEvent.class);
         readable = "ASM: " + target + " " + method.getName() + Type.getMethodDescriptor(method);
 
-        var rawHandler = EventListenerFactory.createRawListener(
-            method,
-            target
-        );
         if (isGeneric && method.getGenericParameterTypes()[0] instanceof ParameterizedType parameterized) {
             var filter = parameterized.getActualTypeArguments()[0];
             this.handler = event -> {

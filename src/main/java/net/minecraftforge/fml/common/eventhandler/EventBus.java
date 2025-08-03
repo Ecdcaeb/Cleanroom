@@ -159,25 +159,24 @@ public class EventBus implements IEventExceptionHandler
             Constructor<?> ctr = eventType.getConstructor();
             ctr.setAccessible(true);
             Event event = (Event)ctr.newInstance();
-            final ASMEventHandler asm = new ASMEventHandler(target, method, owner, IGenericEvent.class.isAssignableFrom(eventType));
+            var context = ASMEventHandler.asmEventHandler(target, method, owner, IGenericEvent.class.isAssignableFrom(eventType));
 
-            IEventListener listener = asm;
-            if (IContextSetter.class.isAssignableFrom(eventType))
-            {
-                listener = e -> {
+            if (IContextSetter.class.isAssignableFrom(eventType)){
+                final IEventListener asmListener = context.listener;
+                context.pass( e -> {
                     var loader = Loader.instance();
                     var old = loader.activeModContainer();
 
                     loader.setActiveModContainer(owner);
                     ((IContextSetter) e).setModContainer(owner);
 
-                    asm.invoke(e);
+                    asmListener.invoke(e);
 
                     loader.setActiveModContainer(old);
-                };
+                });
             }
-
-            event.getListenerList().register(busID, asm.getPriority(), listener);
+            
+            context.bus.register(busID, asmListener.getPriority(), listener);
 
             ArrayList<IEventListener> others = listeners.computeIfAbsent(target, k -> new ArrayList<>());
             others.add(listener);

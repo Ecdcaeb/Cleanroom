@@ -7,16 +7,13 @@ import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import net.minecraftforge.fml.common.ModContainer;
 
-/**
- * @author ZZZank
- */
 class EventListenerFactory {
-    private static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
-
-    public static IEventListener createRawListener(Method method, Object instance) {
+    
+    public static IEventListener.EventListenerContext createRawListener(Class<?> eventType, Method method, Object instance) {
         try {
-            return (IEventListener) method.getDeclaringClass().getMethod("_cleanroom_eventbus_" + method.getName() + "_" + Type.getMethodDescriptor(method).hashCode())
+            return (IEventListener.EventListenerContext) eventType.getMethod("_cleanroom_eventbus_" + method.getName() + "_" + Type.getMethodDescriptor(method).hashCode())
                     .invoke(instance);
         } catch (Throwable t) {
             throw new RuntimeException(t);

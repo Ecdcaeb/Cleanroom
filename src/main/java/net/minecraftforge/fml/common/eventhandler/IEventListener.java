@@ -24,4 +24,19 @@ package net.minecraftforge.fml.common.eventhandler;
 public interface IEventListener
 {
     void invoke(Event event);
+
+    public static class EventListenerContext {
+        public ListenerList bus;
+        public IEventListener listener;
+        public EventListenerContext(ListenerList bus, IEventListener listener) {
+            this.bus = bus;
+            this.listener = listener;
+        }
+        public EventListenerContext pass(IEventListener listener) {
+            this.listener = listener;
+        }
+        public static EventListenerContext create(IEventListener listener, ListenerList bus) {
+            return new EventListenerContext(bus, listener);
+        }
+    }
 }
