@@ -38,7 +38,7 @@ import javax.annotation.Nullable;
 
 public class ModContainerFactory
 {
-    @Deprecated // why it public?
+    @Deprecated // read only. value will be null.
     public static Map<Type, Constructor<? extends ModContainer>> modTypes = Maps.newHashMap();
 
     private static Map<Type, ModContainerConstructor> MOD_TYPES = Maps.newHashMap();
@@ -47,7 +47,7 @@ public class ModContainerFactory
 
     private ModContainerFactory() {
         // We always know about Mod type
-        registerContainerType(Type.getType(Mod.class), FMLModContainer::new);
+        registerContainerType(Type.getType(Mod.class), (className, container, modDescriptor) -> new FMLModContainer(className, container, modDescriptor));
     }
     
     public static ModContainerFactory instance() {
@@ -76,6 +76,7 @@ public class ModContainerFactory
     
     public void registerContainerType(Type type, ModContainerConstructor container)
     {
+        modTypes.put(type, null);
         MOD_TYPES.put(type, container);
     }
 
